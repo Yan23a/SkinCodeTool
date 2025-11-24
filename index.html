@@ -648,7 +648,7 @@
         async function loadHeroesData() {
             try {
                 // 从外部JSON文件加载数据
-                const response = await fetch('https://raw.githubusercontent.com/Yan23a/SkinCodeTool/main/Data/heroes.json');
+                const response = await fetch('https://raw.githubusercontent.com/Yan23a/SkinCodeTool/refs/heads/main/heroes.json');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -1001,3 +1001,4 @@
     </script>
 </body>
 </html>
+
