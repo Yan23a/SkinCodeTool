@@ -1,618 +1,895 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>皮肤代码生成器</title>
-<style>
-* { box-sizing: border-box; margin:0; padding:0; }
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #333;
-  min-height: 100vh;
-  padding-bottom: 20px;
-}
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-header {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  color: #4a5568;
-  padding: 20px;
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-/* 控制面板样式 */
-.control-panel {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-.search-hero-container {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-}
-
-#toggleHeroPanel {
-  flex: 0 0 auto;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-}
-
-#toggleHeroPanel:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-}
-
-.search-box {
-  flex: 1;
-  min-width: 200px;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 16px;
-  border-radius: 10px;
-  border: 2px solid #e2e8f0;
-  background: white;
-  transition: all 0.3s ease;
-}
-
-.search-box input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.top-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 15px;
-  align-items: center;
-}
-
-.btn {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-}
-
-.small-btn {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: #4a5568;
-}
-
-.small-btn:hover {
-  background: #2d3748;
-  transform: translateY(-1px);
-}
-
-select.small-btn {
-  padding: 10px;
-  background: #4a5568;
-  color: white;
-  border: none;
-  border-radius: 8px;
-}
-
-/* 英雄面板样式 */
-.hero-panel {
-  display: none;
-  background: rgba(255,255,255,0.95);
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 15px;
-  max-height: 300px;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.hero-card {
-  background: white;
-  border-radius: 12px;
-  padding: 15px 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.hero-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.hero-card.active {
-  border-color: #667eea;
-  background: linear-gradient(135deg, #f7fafc, #edf2f7);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-}
-
-.hero-card .hero-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  margin: 0 auto 8px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: bold;
-  font-size: 20px;
-}
-
-.hero-card .hero-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #2d3748;
-}
-
-/* 皮肤列表样式 */
-.skin-section {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-.skin-section h3 {
-  color: #2d3748;
-  margin-bottom: 15px;
-  font-size: 20px;
-  border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 8px;
-}
-
-.skin-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 15px;
-}
-
-.skin-card {
-  background: white;
-  border-radius: 12px;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  border: 1px solid #e2e8f0;
-}
-
-.skin-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.skin-card .skin-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-}
-
-.skin-card .skin-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.skin-card .skin-details {
-  flex: 1;
-}
-
-.skin-card .skin-hero {
-  font-weight: 600;
-  color: #2d3748;
-  font-size: 16px;
-}
-
-.skin-card .skin-name {
-  color: #4a5568;
-  font-size: 14px;
-}
-
-.skin-card .skin-code {
-  color: #718096;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-.skin-card .add-btn {
-  background: linear-gradient(135deg, #48bb78, #38a169);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.skin-card .add-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
-}
-
-/* 已选列表样式 */
-.selected-list {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-.selected-list h3 {
-  color: #2d3748;
-  margin-bottom: 15px;
-  font-size: 20px;
-  border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 8px;
-}
-
-.code-line {
-  background: white;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border-left: 4px solid #667eea;
-  opacity: 0;
-  animation: fadeInUp 0.4s forwards;
-}
-
-.code-line .code-text {
-  flex: 1;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  color: #2d3748;
-  padding-right: 15px;
-}
-
-.code-line .code-actions {
-  flex-shrink: 0;
-  display: flex;
-  gap: 8px;
-}
-
-/* Toast 提示 */
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(45, 55, 72, 0.95);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 10px;
-  display: none;
-  z-index: 1000;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  backdrop-filter: blur(10px);
-}
-
-/* 动画 */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .container {
-    padding: 10px;
-  }
-  
-  .skin-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .hero-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  }
-  
-  .search-hero-container {
-    flex-direction: column;
-  }
-  
-  .top-actions {
-    justify-content: center;
-  }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>皮肤代码生成器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary: #6a11cb;
+            --primary-light: #8a3ffc;
+            --secondary: #2575fc;
+            --dark: #2c3e50;
+            --light: #f5f7fa;
+            --gray: #6c757d;
+            --success: #4caf50;
+            --danger: #ff4757;
+            --card-bg: #ffffff;
+            --border-radius: 10px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.5;
+            padding: 10px;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .logo i {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+        
+        .logo h1 {
+            font-size: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .app-description {
+            color: var(--gray);
+            font-size: 0.7rem;
+            margin: 0 auto;
+        }
+        
+        .search-box {
+            background: var(--card-bg);
+            padding: 6px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 6px 12px 6px 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            outline: none;
+            transition: var(--transition);
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.2);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+        
+        .tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            background: #f8f9fa;
+            border: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+        }
+        
+        .tab-content {
+            display: none;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 8px;
+            box-shadow: var(--shadow);
+            height: 35%; /* 缩小英雄和皮肤选择区域 */
+            overflow-y: auto;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .code-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 8px;
+            box-shadow: var(--shadow);
+            height: 55%; /* 增大代码区域 */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .code-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .selected-count {
+            background: var(--primary);
+            color: white;
+            padding: 2px 5px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+        }
+        
+        .code-container {
+            background: var(--light);
+            border-radius: 6px;
+            padding: 6px;
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 6px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .code-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            margin-bottom: 4px;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .code-content {
+            flex: 1;
+        }
+        
+        .code-text {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .code-comment {
+            font-size: 0.55rem;
+            color: var(--gray);
+            margin-top: 1px;
+        }
+        
+        .remove-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 2px 5px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .remove-btn:hover {
+            background: #ff3742;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .btn {
+            flex: 1;
+            border: none;
+            border-radius: 5px;
+            padding: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 2px 6px rgba(106, 17, 203, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(106, 17, 203, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .heroes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+            gap: 6px;
+        }
+        
+        .hero-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            border-radius: 6px;
+            background: var(--light);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .hero-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-item.active {
+            background: #e3f2fd;
+            border-color: var(--primary);
+        }
+        
+        .hero-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 3px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .hero-item.active .hero-avatar {
+            border-color: var(--primary);
+        }
+        
+        .hero-name {
+            font-size: 0.6rem;
+            text-align: center;
+            color: var(--dark);
+        }
+        
+        .skin-indicator {
+            width: 5px;
+            height: 5px;
+            background: var(--success);
+            border-radius: 50%;
+            margin-top: 2px;
+        }
+        
+        .skins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 6px;
+        }
+        
+        .skin-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            border-radius: 6px;
+            background: var(--light);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .skin-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .skin-item.selected {
+            background: #e3f2fd;
+            border-color: var(--primary);
+        }
+        
+        .skin-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 3px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .skin-item.selected .skin-avatar {
+            border-color: var(--primary);
+        }
+        
+        .skin-name {
+            font-size: 0.6rem;
+            text-align: center;
+            color: var(--dark);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 12px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            color: #bdc3c7;
+        }
+        
+        .empty-state div {
+            font-size: 0.75rem;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        .notification.error {
+            background: var(--danger);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 8px;
+            color: var(--gray);
+            font-size: 0.65rem;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60px;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(106, 17, 203, 0.2);
+            border-left: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-<header>🎮 皮肤代码生成器</header>
-<div class="container">
-  <div class="control-panel">
-    <div class="search-hero-container">
-      <button id="toggleHeroPanel" class="btn">👥 英雄列表</button>
-      <div class="search-box">
-        <input id="search" placeholder="🔍 搜索角色或皮肤...">
-      </div>
-    </div>
-    <div class="top-actions">
-      <button id="copyAll" class="btn">📋 复制全部代码</button>
-      <button id="clearAll" class="small-btn">🗑️ 清空</button>
-      <select id="formatSelect" class="small-btn">
-        <option value="default">📝 默认格式</option>
-        <option value="kaito">🎨 快斗美化</option>
-        <option value="shusheng">✨ 书笙美化</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="hero-panel" id="heroPanel">
-    <div class="hero-grid" id="heroGrid"></div>
-  </div>
-
-  <div class="skin-section">
-    <h3>🎭 可选皮肤</h3>
-    <div class="skin-grid" id="skinList"></div>
-  </div>
-
-  <div class="selected-list">
-    <h3>📜 已选代码</h3>
-    <div id="selectedList"></div>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
-
-<script>
-const search = document.getElementById('search');
-const skinList = document.getElementById('skinList');
-const selectedList = document.getElementById('selectedList');
-const copyAllBtn = document.getElementById('copyAll');
-const clearAllBtn = document.getElementById('clearAll');
-const toast = document.getElementById('toast');
-const formatSelect = document.getElementById('formatSelect');
-const toggleHeroPanelBtn = document.getElementById('toggleHeroPanel');
-const heroPanel = document.getElementById('heroPanel');
-const heroGrid = document.getElementById('heroGrid');
-
-let data = [], selected = [], currentHero = null;
-
-function showToast(msg) {
-  toast.innerText = msg;
-  toast.style.display = 'block';
-  setTimeout(() => toast.style.display = 'none', 2000);
-}
-
-function applyFormat(heroCode, skinCode, name, skinName) {
-  const f = formatSelect.value;
-  if (f === 'kaito') return `${heroCode}-${skinCode}-0  #${name}-${skinName}`;
-  if (f === 'shusheng') return `${heroCode} ${skinCode} 1  #${name}-${skinName}`;
-  return `${heroCode} ${skinCode}  #${name}-${skinName}`;
-}
-
-function renderHeroPanel() {
-  heroGrid.innerHTML = '';
-  data.forEach(ch => {
-    const heroCard = document.createElement('div');
-    heroCard.className = 'hero-card';
-    if (currentHero === ch.name) heroCard.classList.add('active');
-    
-    heroCard.innerHTML = `
-      <div class="hero-avatar">${ch.name.charAt(0)}</div>
-      <div class="hero-name">${ch.name}</div>
-    `;
-    
-    heroCard.onclick = () => {
-      currentHero = currentHero === ch.name ? null : ch.name;
-      renderHeroPanel();
-      renderSkins(currentHero ? data.filter(ch2 => ch2.name === currentHero) : data);
-    };
-    
-    heroGrid.appendChild(heroCard);
-  });
-}
-
-function getFilteredSkins() {
-  let list = data;
-  if (currentHero) list = list.filter(ch => ch.name === currentHero);
-  const v = search.value.trim();
-  if (v) {
-    list = list.map(ch => ({
-      name: ch.name,
-      heroCode: ch.heroCode,
-      skins: ch.skins.filter(s => 
-        ch.name.toLowerCase().includes(v.toLowerCase()) || 
-        s.name.toLowerCase().includes(v.toLowerCase())
-      )
-    })).filter(ch => ch.skins.length > 0);
-  }
-  return list;
-}
-
-function renderSkins(list) {
-  skinList.innerHTML = '';
-  list.forEach(ch => {
-    ch.skins.forEach(skin => {
-      const skinCard = document.createElement('div');
-      skinCard.className = 'skin-card';
-      skinCard.innerHTML = `
-        <div class="skin-info">
-          <div class="skin-avatar">${ch.name.charAt(0)}</div>
-          <div class="skin-details">
-            <div class="skin-hero">${ch.name}</div>
-            <div class="skin-name">${skin.name}</div>
-            <div class="skin-code">${ch.heroCode}-${skin.skinCode}</div>
-          </div>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <h1>皮肤代码生成器</h1>
+            </div>
+            <p class="app-description">选择英雄和皮肤，生成对应的代码</p>
+        </header>
+        
+        <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索英雄或皮肤...">
         </div>
-        <button class="add-btn">+ 添加</button>
-      `;
-      skinCard.querySelector('.add-btn').onclick = () => 
-        addSkin(ch.heroCode, skin.skinCode, ch.name, skin.name);
-      skinList.appendChild(skinCard);
-    });
-  });
-}
+        
+        <div class="tabs">
+            <button class="tab active" data-tab="heroes">英雄</button>
+            <button class="tab" data-tab="skins">皮肤</button>
+        </div>
+        
+        <div class="content-area">
+            <div class="tab-content active" id="heroesTab">
+                <div class="heroes-grid" id="heroesContainer">
+                    <!-- 英雄将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="skinsTab">
+                <div class="skins-grid" id="skinsContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-user"></i>
+                        <div>请先选择一个英雄</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-section">
+                <div class="code-header">
+                    <div class="code-title">生成的代码</div>
+                    <div class="selected-count" id="codesCount">0</div>
+                </div>
+                <div class="code-container" id="codeContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-code"></i>
+                        <div>暂无代码，请选择皮肤</div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" id="copyBtn">
+                        <i class="fas fa-copy"></i>
+                        一键复制
+                    </button>
+                    <button class="btn btn-secondary" id="clearBtn">
+                        <i class="fas fa-trash"></i>
+                        清空所有
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>皮肤代码生成器 &copy; 2023 | 数据更新于 <span id="updateDate">2023-06-01</span></p>
+        </footer>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>代码已复制到剪贴板！</span>
+    </div>
+    
+    <script>
+        // 应用状态管理
+        const state = {
+            heroes: [],
+            selectedHero: null,
+            selectedSkins: {},
+            searchTerm: '',
+            currentTab: 'heroes',
+            updateDate: '2023-06-01'
+        };
 
-function addSkin(heroCode, skinCode, name, skinName) {
-  selected.push({heroCode, skinCode, name, skinName});
-  renderSelected();
-  showToast(`已添加: ${name}-${skinName}`);
-}
+        // DOM元素
+        const heroesContainer = document.getElementById('heroesContainer');
+        const skinsContainer = document.getElementById('skinsContainer');
+        const codeContainer = document.getElementById('codeContainer');
+        const searchInput = document.getElementById('searchInput');
+        const copyBtn = document.getElementById('copyBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const notification = document.getElementById('notification');
+        const codesCount = document.getElementById('codesCount');
+        const updateDateEl = document.getElementById('updateDate');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
 
-function renderSelected() {
-  selectedList.innerHTML = '';
-  if (selected.length === 0) {
-    selectedList.innerHTML = '<div style="text-align: center; color: #718096; padding: 40px;">暂无已选代码</div>';
-    return;
-  }
-  
-  selected.forEach((item, idx) => {
-    const line = document.createElement('div');
-    line.className = 'code-line';
-    line.style.animationDelay = `${idx * 0.1}s`;
-    line.innerHTML = `
-      <div class="code-text">${applyFormat(item.heroCode, item.skinCode, item.name, item.skinName)}</div>
-      <div class="code-actions">
-        <button class="small-btn" onclick="copySingle(${idx})">复制</button>
-        <button class="small-btn" onclick="removeLine(${idx})">移除</button>
-      </div>
-    `;
-    selectedList.appendChild(line);
-  });
-}
+        // 初始化应用
+        async function initApp() {
+            updateDateEl.textContent = state.updateDate;
+            
+            try {
+                await loadHeroesData();
+                renderHeroes();
+                setupEventListeners();
+            } catch (error) {
+                console.error('初始化应用失败:', error);
+                heroesContainer.innerHTML = '<div class="empty-state">数据加载失败，请刷新页面重试</div>';
+            }
+        }
 
-function removeLine(i) {
-  const removed = selected.splice(i, 1)[0];
-  renderSelected();
-  showToast(`已移除: ${removed.name}-${removed.skinName}`);
-}
+        // 加载英雄数据
+        async function loadHeroesData() {
+            try {
+                // 模拟数据
+                state.heroes = [
+                    {
+                        id: 1,
+                        name: '孙悟空',
+                        avatar: 'https://via.placeholder.com/50/FF9800/FFFFFF?text=孙',
+                        skins: [
+                            { id: 1, name: '地狱火', code: '115-6-0', avatar: 'https://via.placeholder.com/60/FF9800/FFFFFF?text=火' },
+                            { id: 2, name: '至尊宝', code: '115-1-0', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=宝' },
+                            { id: 3, name: '大圣娶亲', code: '115-2-0', avatar: 'https://via.placeholder.com/60/E91E63/FFFFFF?text=亲' }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        name: '后羿',
+                        avatar: 'https://via.placeholder.com/50/FF5722/FFFFFF?text=后',
+                        skins: [
+                            { id: 1, name: '黄金射手座', code: '169-3-0', avatar: 'https://via.placeholder.com/60/FFC107/FFFFFF?text=金' },
+                            { id: 2, name: '辉光之辰', code: '169-1-0', avatar: 'https://via.placeholder.com/60/2196F3/FFFFFF?text=辰' },
+                            { id: 3, name: '阿尔法小队', code: '169-2-0', avatar: 'https://via.placeholder.com/60/4CAF50/FFFFFF?text=队' }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        name: '貂蝉',
+                        avatar: 'https://via.placeholder.com/50/E91E63/FFFFFF?text=貂',
+                        skins: [
+                            { id: 1, name: '仲夏夜之梦', code: '141-3-0', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=梦' },
+                            { id: 2, name: '猫影幻舞', code: '141-4-0', avatar: 'https://via.placeholder.com/60/00BCD4/FFFFFF?text=舞' },
+                            { id: 3, name: '逐梦之音', code: '141-2-0', avatar: 'https://via.placeholder.com/60/3F51B5/FFFFFF?text=音' }
+                        ]
+                    },
+                    {
+                        id: 4,
+                        name: '李白',
+                        avatar: 'https://via.placeholder.com/50/2196F3/FFFFFF?text=李',
+                        skins: [
+                            { id: 1, name: '凤求凰', code: '131-2-0', avatar: 'https://via.placeholder.com/60/E0E0E0/333333?text=凰' },
+                            { id: 2, name: '千年之狐', code: '131-1-0', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=狐' },
+                            { id: 3, name: '敏锐之力', code: '131-3-0', avatar: 'https://via.placeholder.com/60/FF9800/FFFFFF?text=力' }
+                        ]
+                    },
+                    {
+                        id: 5,
+                        name: '鲁班七号',
+                        avatar: 'https://via.placeholder.com/50/4CAF50/FFFFFF?text=鲁',
+                        skins: [
+                            { id: 1, name: '电玩小子', code: '112-3-0', avatar: 'https://via.placeholder.com/60/FF5722/FFFFFF?text=玩' },
+                            { id: 2, name: '星空梦想', code: '112-4-0', avatar: 'https://via.placeholder.com/60/3F51B5/FFFFFF?text=空' },
+                            { id: 3, name: '狮舞东方', code: '112-5-0', avatar: 'https://via.placeholder.com/60/FFC107/333333?text=狮' }
+                        ]
+                    }
+                ];
+            } catch (error) {
+                console.error('加载英雄数据失败:', error);
+                throw error;
+            }
+        }
 
-function copySingle(i) {
-  const item = selected[i];
-  const text = applyFormat(item.heroCode, item.skinCode, item.name, item.skinName);
-  navigator.clipboard.writeText(text).then(() => showToast('已复制单条代码')).catch(() => showToast('复制失败'));
-}
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 搜索功能
+            searchInput.addEventListener('input', (e) => {
+                state.searchTerm = e.target.value.toLowerCase();
+                if (state.currentTab === 'heroes') {
+                    renderHeroes();
+                } else {
+                    renderSkins();
+                }
+            });
+            
+            // 标签页切换
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // 复制按钮
+            copyBtn.addEventListener('click', copyToClipboard);
+            
+            // 清空按钮
+            clearBtn.addEventListener('click', clearAllCodes);
+        }
 
-// 事件监听
-copyAllBtn.onclick = () => {
-  if (!selected.length) {
-    showToast('没有可复制的代码');
-    return;
-  }
-  const text = selected.map(s => applyFormat(s.heroCode, s.skinCode, s.name, s.skinName)).join('\n');
-  navigator.clipboard.writeText(text).then(() => showToast('已复制全部代码')).catch(() => showToast('复制失败'));
-};
+        // 切换标签页
+        function switchTab(tabId) {
+            // 更新标签页状态
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // 更新内容区域
+            tabContents.forEach(content => {
+                if (content.id === `${tabId}Tab`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            
+            // 更新状态
+            state.currentTab = tabId;
+        }
 
-clearAllBtn.onclick = () => {
-  if (selected.length === 0) {
-    showToast('已清空');
-    return;
-  }
-  selected = [];
-  renderSelected();
-  showToast('已清空所有代码');
-};
+        // 渲染英雄列表
+        function renderHeroes() {
+            heroesContainer.innerHTML = '';
+            
+            // 过滤英雄
+            const filteredHeroes = state.heroes.filter(hero => 
+                hero.name.toLowerCase().includes(state.searchTerm)
+            );
+            
+            if (filteredHeroes.length === 0) {
+                heroesContainer.innerHTML = '<div class="empty-state">未找到匹配的英雄</div>';
+                return;
+            }
+            
+            // 渲染英雄
+            filteredHeroes.forEach(hero => {
+                const heroItem = document.createElement('div');
+                heroItem.className = 'hero-item';
+                if (state.selectedHero && state.selectedHero.id === hero.id) {
+                    heroItem.classList.add('active');
+                }
+                
+                // 检查该英雄是否已选择皮肤
+                const hasSelectedSkin = state.selectedSkins[hero.id];
+                
+                heroItem.innerHTML = `
+                    <img src="${hero.avatar}" alt="${hero.name}" class="hero-avatar">
+                    <span class="hero-name">${hero.name}</span>
+                    ${hasSelectedSkin ? '<div class="skin-indicator"></div>' : ''}
+                `;
+                
+                heroItem.addEventListener('click', () => {
+                    state.selectedHero = hero;
+                    renderHeroes();
+                    renderSkins();
+                    switchTab('skins');
+                });
+                
+                heroesContainer.appendChild(heroItem);
+            });
+        }
 
-search.oninput = () => {
-  renderSkins(getFilteredSkins());
-};
+        // 渲染皮肤列表
+        function renderSkins() {
+            skinsContainer.innerHTML = '';
+            
+            // 如果没有选中英雄，显示提示
+            if (!state.selectedHero) {
+                skinsContainer.innerHTML = '<div class="empty-state"><i class="fas fa-user"></i><div>请先选择一个英雄</div></div>';
+                return;
+            }
+            
+            // 过滤皮肤
+            const filteredSkins = state.selectedHero.skins.filter(skin => 
+                skin.name.toLowerCase().includes(state.searchTerm)
+            );
+            
+            if (filteredSkins.length === 0) {
+                skinsContainer.innerHTML = '<div class="empty-state">未找到匹配的皮肤</div>';
+                return;
+            }
+            
+            // 渲染皮肤
+            filteredSkins.forEach(skin => {
+                const skinItem = document.createElement('div');
+                skinItem.className = 'skin-item';
+                
+                // 检查是否已选择此皮肤
+                const isSelected = state.selectedSkins[state.selectedHero.id] && 
+                                  state.selectedSkins[state.selectedHero.id].id === skin.id;
+                
+                if (isSelected) {
+                    skinItem.classList.add('selected');
+                }
+                
+                skinItem.innerHTML = `
+                    <img src="${skin.avatar}" alt="${skin.name}" class="skin-avatar">
+                    <span class="skin-name">${skin.name}</span>
+                `;
+                
+                skinItem.addEventListener('click', () => {
+                    selectSkinForHero(skin);
+                });
+                
+                skinsContainer.appendChild(skinItem);
+            });
+        }
 
-formatSelect.onchange = () => {
-  renderSelected();
-};
+        // 为英雄选择皮肤
+        function selectSkinForHero(skin) {
+            const wasSelected = state.selectedSkins[state.selectedHero.id] && 
+                              state.selectedSkins[state.selectedHero.id].id === skin.id;
+            
+            if (state.selectedSkins[state.selectedHero.id]) {
+                if (state.selectedSkins[state.selectedHero.id].id === skin.id) {
+                    delete state.selectedSkins[state.selectedHero.id];
+                    showNotification(`已移除 ${state.selectedHero.name} - ${skin.name}`, 'success');
+                } else {
+                    state.selectedSkins[state.selectedHero.id] = {
+                        id: skin.id,
+                        heroId: state.selectedHero.id,
+                        heroName: state.selectedHero.name,
+                        name: skin.name,
+                        code: skin.code
+                    };
+                    showNotification(`已添加 ${state.selectedHero.name} - ${skin.name}`, 'success');
+                }
+            } else {
+                state.selectedSkins[state.selectedHero.id] = {
+                    id: skin.id,
+                    heroId: state.selectedHero.id,
+                    heroName: state.selectedHero.name,
+                    name: skin.name,
+                    code: skin.code
+                };
+                showNotification(`已添加 ${state.selectedHero.name} - ${skin.name}`, 'success');
+            }
+            
+            renderSkins();
+            renderHeroes();
+            renderCodeList();
+        }
 
-toggleHeroPanelBtn.onclick = () => {
-  const isVisible = heroPanel.style.display === 'block';
-  heroPanel.style.display = isVisible ? 'none' : 'block';
-  toggleHeroPanelBtn.textContent = isVisible ? '👥 英雄列表' : '👥 隐藏列表';
-};
+        // 渲染代码列表
+        function renderCodeList() {
+            codeContainer.innerHTML = '';
+            
+            const selectedSkinsArray = Object.values(state.selectedSkins);
+            
+            // 更新代码计数
+            codesCount.textContent = selectedSkinsArray.length;
+            
+            if (selectedSkinsArray.length === 0) {
+                codeContainer.innerHTML = '<div class="empty-state"><i class="fas fa-code"></i><div>暂无代码，请选择皮肤</div></div>';
+                return;
+            }
+            
+            selectedSkinsArray.forEach((skin, index) => {
+                const codeItem = document.createElement('div');
+                codeItem.className = 'code-item';
+                
+                codeItem.innerHTML = `
+                    <div class="code-content">
+                        <div class="code-text">${skin.code}</div>
+                        <div class="code-comment">#${skin.heroName}-${skin.name}</div>
+                    </div>
+                    <button class="remove-btn" data-hero-id="${skin.heroId}">移除</button>
+                `;
+                
+                codeContainer.appendChild(codeItem);
+            });
+            
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const heroId = parseInt(e.target.getAttribute('data-hero-id'));
+                    const skin = state.selectedSkins[heroId];
+                    delete state.selectedSkins[heroId];
+                    renderSkins();
+                    renderHeroes();
+                    renderCodeList();
+                    showNotification(`已移除 ${skin.heroName} - ${skin.name}`, 'success');
+                });
+            });
+        }
 
-// 加载数据
-fetch('skins.json')
-  .then(r => r.json())
-  .then(json => {
-    data = json;
-    renderHeroPanel();
-    renderSkins(data);
-  })
-  .catch(() => {
-    console.error('无法加载 skins.json');
-    showToast('加载数据失败');
-  });
-</script>
+        // 复制代码到剪贴板
+        function copyToClipboard() {
+            const selectedSkinsArray = Object.values(state.selectedSkins);
+            
+            if (selectedSkinsArray.length === 0) {
+                showNotification('请先选择皮肤！', 'error');
+                return;
+            }
+            
+            const codes = selectedSkinsArray.map(skin => `${skin.code}  #${skin.heroName}-${skin.name}`).join('\n');
+            
+            navigator.clipboard.writeText(codes).then(() => {
+                showNotification('代码已复制到剪贴板！');
+            }).catch(err => {
+                console.error('复制失败: ', err);
+                showNotification('复制失败，请手动复制', 'error');
+            });
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'success') {
+            notification.textContent = message;
+            notification.className = 'notification';
+            
+            if (type === 'error') {
+                notification.classList.add('error');
+                notification.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>' + message + '</span>';
+            } else {
+                notification.classList.remove('error');
+                notification.innerHTML = '<i class="fas fa-check-circle"></i><span>' + message + '</span>';
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        // 清空所有代码
+        function clearAllCodes() {
+            state.selectedSkins = {};
+            renderSkins();
+            renderHeroes();
+            renderCodeList();
+            showNotification('已清空所有代码', 'success');
+        }
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
 </body>
 </html>
