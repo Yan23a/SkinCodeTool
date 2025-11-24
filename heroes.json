@@ -1,0 +1,20 @@
+[
+  {
+    "heroId": 112,
+    "name": "鲁班七号",
+    "avatar": "https://via.placeholder.com/50/4CAF50/FFFFFF?text=鲁",
+    "skins": [
+      { "skinId": 3, "name": "电玩小子", "avatar": "https://via.placeholder.com/60/FF5722/FFFFFF?text=玩" },
+      { "skinId": 4, "name": "星空梦想", "avatar": "https://via.placeholder.com/60/3F51B5/FFFFFF?text=空" }
+    ]
+  },
+  {
+    "heroId": 115,
+    "name": "孙悟空",
+    "avatar": "https://via.placeholder.com/50/FF9800/FFFFFF?text=孙",
+    "skins": [
+      { "skinId": 6, "name": "地狱火", "avatar": "https://via.placeholder.com/60/FF9800/FFFFFF?text=火" },
+      { "skinId": 1, "name": "至尊宝", "avatar": "https://via.placeholder.com/60/9C27B0/FFFFFF?text=宝" }
+    ]
+  }
+]
