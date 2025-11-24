@@ -147,7 +147,7 @@
             border-radius: var(--border-radius);
             padding: 8px;
             box-shadow: var(--shadow);
-            height: 35%; /* 缩小英雄和皮肤选择区域 */
+            height: 35%;
             overflow-y: auto;
         }
         
@@ -160,7 +160,7 @@
             border-radius: var(--border-radius);
             padding: 8px;
             box-shadow: var(--shadow);
-            height: 55%; /* 增大代码区域 */
+            height: 55%;
             display: flex;
             flex-direction: column;
         }
@@ -182,13 +182,8 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            margin-left: auto; /* 将格式选择器推到右侧 */
-            margin-right: 10px; /* 添加右边距 */
-        }
-        
-        .format-label {
-            font-size: 0.65rem;
-            color: var(--gray);
+            margin-left: auto;
+            margin-right: 10px;
         }
         
         .format-select {
@@ -301,10 +296,9 @@
             background: #5a6268;
         }
         
-        /* 修改英雄网格项大小与皮肤一致 */
         .heroes-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); /* 与皮肤网格保持一致 */
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
             gap: 6px;
         }
         
@@ -330,10 +324,9 @@
             border-color: var(--primary);
         }
         
-        /* 修改英雄头像大小与皮肤头像一致 */
         .hero-avatar {
-            width: 35px; /* 与皮肤头像大小一致 */
-            height: 35px; /* 与皮肤头像大小一致 */
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 3px;
@@ -348,8 +341,8 @@
             font-size: 0.6rem;
             text-align: center;
             color: var(--dark);
-            word-break: keep-all; /* 防止文本被拆分 */
-            white-space: nowrap; /* 防止文本换行 */
+            word-break: keep-all;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
@@ -408,8 +401,8 @@
             font-size: 0.6rem;
             text-align: center;
             color: var(--dark);
-            word-break: keep-all; /* 防止文本被拆分 */
-            white-space: nowrap; /* 防止文本换行 */
+            word-break: keep-all;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
@@ -419,8 +412,8 @@
             text-align: center;
             padding: 12px;
             color: var(--gray);
-            word-break: keep-all; /* 防止文本被拆分 */
-            white-space: normal; /* 允许正常换行 */
+            word-break: keep-all;
+            white-space: normal;
             line-height: 1.4;
             width: 100%;
         }
@@ -433,8 +426,8 @@
         
         .empty-state div {
             font-size: 0.75rem;
-            white-space: normal; /* 允许正常换行 */
-            word-break: keep-all; /* 防止文本被拆分 */
+            white-space: normal;
+            word-break: keep-all;
             line-height: 1.4;
         }
         
@@ -455,8 +448,8 @@
             align-items: center;
             gap: 5px;
             font-size: 0.75rem;
-            word-break: keep-all; /* 防止文本被拆分 */
-            white-space: nowrap; /* 防止文本换行 */
+            word-break: keep-all;
+            white-space: nowrap;
         }
         
         .notification.show {
@@ -472,8 +465,8 @@
             margin-top: 8px;
             color: var(--gray);
             font-size: 0.65rem;
-            word-break: keep-all; /* 防止文本被拆分 */
-            white-space: normal; /* 允许正常换行 */
+            word-break: keep-all;
+            white-space: normal;
         }
         
         .loading {
@@ -523,7 +516,10 @@
         <div class="content-area">
             <div class="tab-content active" id="heroesTab">
                 <div class="heroes-grid" id="heroesContainer">
-                    <!-- 英雄将通过JavaScript动态生成 -->
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div>正在加载英雄数据...</div>
+                    </div>
                 </div>
             </div>
             
@@ -540,7 +536,6 @@
                 <div class="code-header">
                     <div class="code-title">生成的代码</div>
                     <div class="code-format-selector">
-                        <span class="format-label">格式:</span>
                         <select class="format-select" id="formatSelect">
                             <option value="default">默认格式</option>
                             <option value="kuaidou">快斗模式</option>
@@ -587,7 +582,7 @@
             searchTerm: '',
             currentTab: 'heroes',
             updateDate: '2023-06-01',
-            codeFormat: 'default' // 默认格式
+            codeFormat: 'default'
         };
 
         // DOM元素
@@ -618,62 +613,15 @@
             }
         }
 
-        // 加载英雄数据
+        // 从外部文件加载英雄数据
         async function loadHeroesData() {
             try {
-                // 模拟数据 - 完全使用游戏中的英雄代码和皮肤代码作为标识符
-                state.heroes = [
-                    {
-                        heroId: 112, // 鲁班七号的游戏代码
-                        name: '鲁班七号',
-                        avatar: 'https://via.placeholder.com/50/4CAF50/FFFFFF?text=鲁',
-                        skins: [
-                            { skinId: 3, name: '电玩小子', avatar: 'https://via.placeholder.com/60/FF5722/FFFFFF?text=玩' },
-                            { skinId: 4, name: '星空梦想', avatar: 'https://via.placeholder.com/60/3F51B5/FFFFFF?text=空' },
-                            { skinId: 5, name: '狮舞东方', avatar: 'https://via.placeholder.com/60/FFC107/333333?text=狮' }
-                        ]
-                    },
-                    {
-                        heroId: 115, // 孙悟空的游戏代码
-                        name: '孙悟空',
-                        avatar: 'https://via.placeholder.com/50/FF9800/FFFFFF?text=孙',
-                        skins: [
-                            { skinId: 6, name: '地狱火', avatar: 'https://via.placeholder.com/60/FF9800/FFFFFF?text=火' },
-                            { skinId: 1, name: '至尊宝', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=宝' },
-                            { skinId: 2, name: '大圣娶亲', avatar: 'https://via.placeholder.com/60/E91E63/FFFFFF?text=亲' }
-                        ]
-                    },
-                    {
-                        heroId: 131, // 李白的游戏代码
-                        name: '李白',
-                        avatar: 'https://via.placeholder.com/50/2196F3/FFFFFF?text=李',
-                        skins: [
-                            { skinId: 2, name: '凤求凰', avatar: 'https://via.placeholder.com/60/E0E0E0/333333?text=凰' },
-                            { skinId: 1, name: '千年之狐', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=狐' },
-                            { skinId: 3, name: '敏锐之力', avatar: 'https://via.placeholder.com/60/FF9800/FFFFFF?text=力' }
-                        ]
-                    },
-                    {
-                        heroId: 141, // 貂蝉的游戏代码
-                        name: '貂蝉',
-                        avatar: 'https://via.placeholder.com/50/E91E63/FFFFFF?text=貂',
-                        skins: [
-                            { skinId: 3, name: '仲夏夜之梦', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=梦' },
-                            { skinId: 4, name: '猫影幻舞', avatar: 'https://via.placeholder.com/60/00BCD4/FFFFFF?text=舞' },
-                            { skinId: 2, name: '逐梦之音', avatar: 'https://via.placeholder.com/60/3F51B5/FFFFFF?text=音' }
-                        ]
-                    },
-                    {
-                        heroId: 169, // 后羿的游戏代码
-                        name: '后羿',
-                        avatar: 'https://via.placeholder.com/50/FF5722/FFFFFF?text=后',
-                        skins: [
-                            { skinId: 3, name: '黄金射手座', avatar: 'https://via.placeholder.com/60/FFC107/FFFFFF?text=金' },
-                            { skinId: 1, name: '辉光之辰', avatar: 'https://via.placeholder.com/60/2196F3/FFFFFF?text=辰' },
-                            { skinId: 2, name: '阿尔法小队', avatar: 'https://via.placeholder.com/60/4CAF50/FFFFFF?text=队' }
-                        ]
-                    }
-                ];
+                // 从外部JSON文件加载数据
+                const response = await fetch('heroes.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                state.heroes = await response.json();
                 
                 // 对英雄按照游戏代码排序
                 state.heroes.sort((a, b) => a.heroId - b.heroId);
@@ -684,7 +632,46 @@
                 });
             } catch (error) {
                 console.error('加载英雄数据失败:', error);
-                throw error;
+                // 如果外部文件加载失败，使用默认数据
+                state.heroes = [
+                    {
+                        heroId: 112,
+                        name: '鲁班七号',
+                        avatar: 'https://via.placeholder.com/50/4CAF50/FFFFFF?text=鲁',
+                        skins: [
+                            { skinId: 3, name: '电玩小子', avatar: 'https://via.placeholder.com/60/FF5722/FFFFFF?text=玩' },
+                            { skinId: 4, name: '星空梦想', avatar: 'https://via.placeholder.com/60/3F51B5/FFFFFF?text=空' },
+                            { skinId: 5, name: '狮舞东方', avatar: 'https://via.placeholder.com/60/FFC107/333333?text=狮' }
+                        ]
+                    },
+                    {
+                        heroId: 115,
+                        name: '孙悟空',
+                        avatar: 'https://via.placeholder.com/50/FF9800/FFFFFF?text=孙',
+                        skins: [
+                            { skinId: 6, name: '地狱火', avatar: 'https://via.placeholder.com/60/FF9800/FFFFFF?text=火' },
+                            { skinId: 1, name: '至尊宝', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=宝' },
+                            { skinId: 2, name: '大圣娶亲', avatar: 'https://via.placeholder.com/60/E91E63/FFFFFF?text=亲' }
+                        ]
+                    },
+                    {
+                        heroId: 131,
+                        name: '李白',
+                        avatar: 'https://via.placeholder.com/50/2196F3/FFFFFF?text=李',
+                        skins: [
+                            { skinId: 2, name: '凤求凰', avatar: 'https://via.placeholder.com/60/E0E0E0/333333?text=凰' },
+                            { skinId: 1, name: '千年之狐', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=狐' },
+                            { skinId: 3, name: '敏锐之力', avatar: 'https://via.placeholder.com/60/FF9800/FFFFFF?text=力' }
+                        ]
+                    }
+                ];
+                
+                // 更新数据日期为当前日期
+                const now = new Date();
+                state.updateDate = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+                updateDateEl.textContent = state.updateDate;
+                
+                throw error; // 重新抛出错误，以便在initApp中捕获
             }
         }
 
