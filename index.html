@@ -259,8 +259,9 @@
         .code-text {
             font-family: 'Courier New', monospace;
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 800; /* 加粗代码数字 */
             color: var(--dark);
+            letter-spacing: 0.5px; /* 增加字母间距使数字更清晰 */
         }
         
         .code-comment {
@@ -351,10 +352,11 @@
             border-color: var(--primary);
         }
         
+        /* 修改英雄头像为方形 */
         .hero-avatar {
             width: 35px;
             height: 35px;
-            border-radius: 50%;
+            border-radius: 4px; /* 改为方形圆角 */
             object-fit: cover;
             margin-bottom: 4px;
             border: 1px solid #e0e0e0;
@@ -413,10 +415,11 @@
             border-color: var(--primary);
         }
         
+        /* 修改皮肤头像为方形 */
         .skin-avatar {
             width: 35px;
             height: 35px;
-            border-radius: 50%;
+            border-radius: 4px; /* 改为方形圆角 */
             object-fit: cover;
             margin-bottom: 4px;
             border: 1px solid #e0e0e0;
@@ -569,8 +572,8 @@
                     <div class="code-format-selector">
                         <select class="format-select" id="formatSelect">
                             <option value="default">默认格式</option>
-                            <option value="kuaidou">快斗模式</option>
-                            <option value="shusheng">书笙模式</option>
+                            <option value="kuaidou">快斗美化</option>
+                            <option value="shusheng">书笙美化</option>
                         </select>
                     </div>
                     <div class="selected-count" id="codesCount">0</div>
@@ -595,7 +598,7 @@
         </div>
         
         <footer>
-            <p>皮肤代码生成器 &copy; 2023 | 数据更新于 <span id="updateDate">2023-06-01</span></p>
+            <p>皮肤代码生成器 &copy; 2025 | 数据更新于 <span id="updateDate">2025-11-25</span></p>
         </footer>
     </div>
     
@@ -612,7 +615,7 @@
             selectedSkins: {},
             searchTerm: '',
             currentTab: 'heroes',
-            updateDate: '2023-06-01',
+            updateDate: '2025-11-25',
             codeFormat: 'default'
         };
 
@@ -891,10 +894,10 @@
                     // 默认格式：英雄代码-皮肤代码，如 "115-6"
                     return `${heroId}-${skinId}`;
                 case 'kuaidou':
-                    // 快斗模式：在末尾添加 "-0"，如 "115-6-0"
+                    // 快斗美化：在末尾添加 "-0"，如 "115-6-0"
                     return `${heroId}-${skinId}-0`;
                 case 'shusheng':
-                    // 书笙模式：用空格分隔，如 "115 6 1"
+                    // 书笙美化：用空格分隔，如 "115 6 1"
                     return `${heroId} ${skinId} 1`;
                 default:
                     return `${heroId}-${skinId}`;
@@ -1001,4 +1004,3 @@
     </script>
 </body>
 </html>
-
