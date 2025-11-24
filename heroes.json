@@ -11,10 +11,11 @@
   {
     "heroId": 115,
     "name": "孙悟空",
-    "avatar": "https://via.placeholder.com/50/FF9800/FFFFFF?text=孙",
+    "avatar": "https://raw.githubusercontent.com/Yan23a/SkinCodeTool/refs/heads/main/avatars/123-6.jpg",
     "skins": [
-      { "skinId": 6, "name": "地狱火", "avatar": "https://via.placeholder.com/60/FF9800/FFFFFF?text=火" },
-      { "skinId": 1, "name": "至尊宝", "avatar": "https://via.placeholder.com/60/9C27B0/FFFFFF?text=宝" }
+      { "skinId": 6, "name": "地狱火", "avatar": "https://raw.githubusercontent.com/Yan23a/SkinCodeTool/refs/heads/main/avatars/123-6.jpg" },
+      { "skinId": 1, "name": "至尊宝", "avatar": "https://raw.githubusercontent.com/Yan23a/SkinCodeTool/refs/heads/main/avatars/123-6.jpg" }
     ]
   }
 ]
+
