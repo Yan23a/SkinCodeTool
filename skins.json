@@ -1,0 +1,10 @@
+[
+  {
+    "name": "孙悟空",
+    "heroCode": 123,
+    "skins": [
+      { "name": "地狱火", "skinCode": 6 },
+      { "name": "齐天大圣", "skinCode": 9 }
+    ]
+  }
+]

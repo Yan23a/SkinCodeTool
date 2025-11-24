@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>皮肤代码生成器</title>
+<style>
+  body { font-family: sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+  header { background: #333; color: #fff; padding: 12px; text-align: center; font-size: 20px; }
+  .container { padding: 12px; }
+  .search-box input { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 12px; }
+  .top-actions { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .btn, .small-btn { padding: 8px 12px; border: none; background: #007bff; color: white; border-radius: 6px; font-size: 14px; }
+  .small-btn { background: #666; }
+  .card { background: white; padding: 12px; margin-bottom: 10px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
+  .skins { margin-top: 20px; }
+  .selected-list { margin-top: 20px; }
+  .line { background: white; padding: 10px; border-radius: 6px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 8px 14px; border-radius: 6px; display: none; }
+</style>
+</head>
+<body>
+<header>皮肤代码生成器</header>
+<div class="container">
+  <div class="search-box">
+    <input id="search" placeholder="搜索角色或皮肤..." />
+  </div>
+
+  <div class="top-actions">
+    <button id="copyAll" class="btn">复制全部代码</button>
+    <button id="clearAll" class="small-btn">清空</button>
+
+    <select id="formatSelect" class="small-btn" style="padding:6px;">
+      <option value="default">默认格式</option>
+      <option value="kaito">快斗美化</option>
+      <option value="shusheng">书笙美化</option>
+    </select>
+  </div>
+
+  <h3>可选皮肤</h3>
+  <div id="skinList" class="skins"></div>
+
+  <h3>已选代码</h3>
+  <div id="selectedList" class="selected-list"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const search = document.getElementById('search');
+const skinList = document.getElementById('skinList');
+const selectedList = document.getElementById('selectedList');
+const copyAllBtn = document.getElementById('copyAll');
+const clearAllBtn = document.getElementById('clearAll');
+const toast = document.getElementById('toast');
+const formatSelect = document.getElementById('formatSelect');
+
+let data = [];
+let selected = [];
+
+function showToast(msg){ toast.innerText = msg; toast.style.display = 'block'; setTimeout(()=> toast.style.display = 'none',1500); }
+
+function applyFormat(heroCode, skinCode, name, skinName){
+  const f = formatSelect.value;
+  if(f === 'kaito') return `${heroCode}-${skinCode}-0  #${name}-${skinName}`;
+  if(f === 'shusheng') return `${heroCode} ${skinCode} 1  #${name}-${skinName}`;
+  return `${heroCode} ${skinCode}  #${name}-${skinName}`;
+}
+
+function renderSkins(list){
+  skinList.innerHTML = '';
+  list.forEach(ch => {
+    ch.skins.forEach(skin => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div>
+          <strong>${ch.name}</strong> - ${skin.name}<br>
+          <small>原始代码：${ch.heroCode}-${skin.skinCode}</small>
+        </div>
+        <button class="btn">添加</button>
+      `;
+      card.querySelector('button').onclick = () => addSkin(ch.heroCode, skin.skinCode, ch.name, skin.name);
+      skinList.appendChild(card);
+    });
+  });
+}
+
+function addSkin(heroCode, skinCode, name, skinName){
+  selected.push({ heroCode, skinCode, name, skinName });
+  renderSelected();
+}
+
+function renderSelected(){
+  selectedList.innerHTML = '';
+  selected.forEach((item, idx) => {
+    const line = document.createElement('div');
+    line.className = 'line';
+    line.innerHTML = `
+      <div>${applyFormat(item.heroCode, item.skinCode, item.name, item.skinName)}</div>
+      <div>
+        <button class="small-btn" onclick="copySingle(${idx})">复制</button>
+        <button class="small-btn" onclick="removeLine(${idx})">移除</button>
+      </div>
+    `;
+    selectedList.appendChild(line);
+  });
+}
+
+function removeLine(i){ selected.splice(i,1); renderSelected(); }
+
+function copySingle(i){
+  const item = selected[i];
+  const text = applyFormat(item.heroCode, item.skinCode, item.name, item.skinName);
+  navigator.clipboard.writeText(text).then(()=>showToast('已复制')).catch(()=>showToast('复制失败'));
+}
+
+copyAllBtn.onclick = () => {
+  if(!selected.length){ showToast('没有可复制的代码'); return; }
+  const text = selected.map(s=> applyFormat(s.heroCode,s.skinCode,s.name,s.skinName)).join('\n');
+  navigator.clipboard.writeText(text).then(()=>showToast('已复制全部')).catch(()=>showToast('复制失败'));
+};
+
+clearAllBtn.onclick = () => { selected = []; renderSelected(); showToast('已清空'); };
+
+search.oninput = () => {
+  const v = search.value.trim();
+  if(!v){ renderSkins(data); return; }
+  const filtered = data.map(ch=>({
+    name: ch.name,
+    heroCode: ch.heroCode,
+    skins: ch.skins.filter(s => ch.name.includes(v) || s.name.includes(v))
+  })).filter(ch=> ch.skins.length>0);
+  renderSkins(filtered);
+};
+
+fetch('skins.json').then(r=>r.json()).then(json=>{ data=json; renderSkins(data); }).catch(()=>{ console.error('无法加载 skins.json'); });
+</script>
+</body>
+</html>
