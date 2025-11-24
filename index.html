@@ -178,6 +178,27 @@
             color: var(--dark);
         }
         
+        .code-format-selector {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .format-label {
+            font-size: 0.65rem;
+            color: var(--gray);
+        }
+        
+        .format-select {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 3px 5px;
+            font-size: 0.65rem;
+            background: white;
+            outline: none;
+            cursor: pointer;
+        }
+        
         .selected-count {
             background: var(--primary);
             color: white;
@@ -323,6 +344,11 @@
             font-size: 0.6rem;
             text-align: center;
             color: var(--dark);
+            word-break: keep-all; /* 防止文本被拆分 */
+            white-space: nowrap; /* 防止文本换行 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
         
         .skin-indicator {
@@ -378,12 +404,21 @@
             font-size: 0.6rem;
             text-align: center;
             color: var(--dark);
+            word-break: keep-all; /* 防止文本被拆分 */
+            white-space: nowrap; /* 防止文本换行 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
         
         .empty-state {
             text-align: center;
             padding: 12px;
             color: var(--gray);
+            word-break: keep-all; /* 防止文本被拆分 */
+            white-space: normal; /* 允许正常换行 */
+            line-height: 1.4;
+            width: 100%;
         }
         
         .empty-state i {
@@ -394,6 +429,9 @@
         
         .empty-state div {
             font-size: 0.75rem;
+            white-space: normal; /* 允许正常换行 */
+            word-break: keep-all; /* 防止文本被拆分 */
+            line-height: 1.4;
         }
         
         .notification {
@@ -413,6 +451,8 @@
             align-items: center;
             gap: 5px;
             font-size: 0.75rem;
+            word-break: keep-all; /* 防止文本被拆分 */
+            white-space: nowrap; /* 防止文本换行 */
         }
         
         .notification.show {
@@ -428,6 +468,8 @@
             margin-top: 8px;
             color: var(--gray);
             font-size: 0.65rem;
+            word-break: keep-all; /* 防止文本被拆分 */
+            white-space: normal; /* 允许正常换行 */
         }
         
         .loading {
@@ -493,6 +535,14 @@
             <div class="code-section">
                 <div class="code-header">
                     <div class="code-title">生成的代码</div>
+                    <div class="code-format-selector">
+                        <span class="format-label">格式:</span>
+                        <select class="format-select" id="formatSelect">
+                            <option value="default">默认格式</option>
+                            <option value="kuaidou">快斗模式</option>
+                            <option value="shusheng">书笙模式</option>
+                        </select>
+                    </div>
                     <div class="selected-count" id="codesCount">0</div>
                 </div>
                 <div class="code-container" id="codeContainer">
@@ -532,7 +582,8 @@
             selectedSkins: {},
             searchTerm: '',
             currentTab: 'heroes',
-            updateDate: '2023-06-01'
+            updateDate: '2023-06-01',
+            codeFormat: 'default' // 默认格式
         };
 
         // DOM元素
@@ -547,6 +598,7 @@
         const updateDateEl = document.getElementById('updateDate');
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
+        const formatSelect = document.getElementById('formatSelect');
 
         // 初始化应用
         async function initApp() {
@@ -649,6 +701,12 @@
             
             // 清空按钮
             clearBtn.addEventListener('click', clearAllCodes);
+            
+            // 代码格式切换
+            formatSelect.addEventListener('change', (e) => {
+                state.codeFormat = e.target.value;
+                renderCodeList();
+            });
         }
 
         // 切换标签页
@@ -798,6 +856,25 @@
             renderCodeList();
         }
 
+        // 根据格式生成代码
+        function formatCode(code, format) {
+            const parts = code.split('-');
+            
+            switch(format) {
+                case 'default':
+                    // 默认格式：只显示前两部分，如 "115-2"
+                    return parts.slice(0, 2).join('-');
+                case 'kuaidou':
+                    // 快斗模式：显示完整代码，如 "115-2-0"
+                    return code;
+                case 'shusheng':
+                    // 书笙模式：用空格分隔，第三部分固定为1，如 "115 2 1"
+                    return `${parts[0]} ${parts[1]} 1`;
+                default:
+                    return code;
+            }
+        }
+
         // 渲染代码列表
         function renderCodeList() {
             codeContainer.innerHTML = '';
@@ -816,9 +893,11 @@
                 const codeItem = document.createElement('div');
                 codeItem.className = 'code-item';
                 
+                const formattedCode = formatCode(skin.code, state.codeFormat);
+                
                 codeItem.innerHTML = `
                     <div class="code-content">
-                        <div class="code-text">${skin.code}</div>
+                        <div class="code-text">${formattedCode}</div>
                         <div class="code-comment">#${skin.heroName}-${skin.name}</div>
                     </div>
                     <button class="remove-btn" data-hero-id="${skin.heroId}">移除</button>
@@ -849,7 +928,10 @@
                 return;
             }
             
-            const codes = selectedSkinsArray.map(skin => `${skin.code}  #${skin.heroName}-${skin.name}`).join('\n');
+            const codes = selectedSkinsArray.map(skin => {
+                const formattedCode = formatCode(skin.code, state.codeFormat);
+                return `${formattedCode}  #${skin.heroName}-${skin.name}`;
+            }).join('\n');
             
             navigator.clipboard.writeText(codes).then(() => {
                 showNotification('代码已复制到剪贴板！');
