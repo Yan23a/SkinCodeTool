@@ -182,6 +182,8 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            margin-left: auto; /* 将格式选择器推到右侧 */
+            margin-right: 10px; /* 添加右边距 */
         }
         
         .format-label {
@@ -617,59 +619,67 @@
         // 加载英雄数据
         async function loadHeroesData() {
             try {
-                // 模拟数据
+                // 模拟数据 - 完全使用游戏中的英雄代码和皮肤代码作为标识符
                 state.heroes = [
                     {
-                        id: 1,
-                        name: '孙悟空',
-                        avatar: 'https://via.placeholder.com/50/FF9800/FFFFFF?text=孙',
-                        skins: [
-                            { id: 1, name: '地狱火', code: '115-6-0', avatar: 'https://via.placeholder.com/60/FF9800/FFFFFF?text=火' },
-                            { id: 2, name: '至尊宝', code: '115-1-0', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=宝' },
-                            { id: 3, name: '大圣娶亲', code: '115-2-0', avatar: 'https://via.placeholder.com/60/E91E63/FFFFFF?text=亲' }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        name: '后羿',
-                        avatar: 'https://via.placeholder.com/50/FF5722/FFFFFF?text=后',
-                        skins: [
-                            { id: 1, name: '黄金射手座', code: '169-3-0', avatar: 'https://via.placeholder.com/60/FFC107/FFFFFF?text=金' },
-                            { id: 2, name: '辉光之辰', code: '169-1-0', avatar: 'https://via.placeholder.com/60/2196F3/FFFFFF?text=辰' },
-                            { id: 3, name: '阿尔法小队', code: '169-2-0', avatar: 'https://via.placeholder.com/60/4CAF50/FFFFFF?text=队' }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        name: '貂蝉',
-                        avatar: 'https://via.placeholder.com/50/E91E63/FFFFFF?text=貂',
-                        skins: [
-                            { id: 1, name: '仲夏夜之梦', code: '141-3-0', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=梦' },
-                            { id: 2, name: '猫影幻舞', code: '141-4-0', avatar: 'https://via.placeholder.com/60/00BCD4/FFFFFF?text=舞' },
-                            { id: 3, name: '逐梦之音', code: '141-2-0', avatar: 'https://via.placeholder.com/60/3F51B5/FFFFFF?text=音' }
-                        ]
-                    },
-                    {
-                        id: 4,
-                        name: '李白',
-                        avatar: 'https://via.placeholder.com/50/2196F3/FFFFFF?text=李',
-                        skins: [
-                            { id: 1, name: '凤求凰', code: '131-2-0', avatar: 'https://via.placeholder.com/60/E0E0E0/333333?text=凰' },
-                            { id: 2, name: '千年之狐', code: '131-1-0', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=狐' },
-                            { id: 3, name: '敏锐之力', code: '131-3-0', avatar: 'https://via.placeholder.com/60/FF9800/FFFFFF?text=力' }
-                        ]
-                    },
-                    {
-                        id: 5,
+                        heroId: 112, // 鲁班七号的游戏代码
                         name: '鲁班七号',
                         avatar: 'https://via.placeholder.com/50/4CAF50/FFFFFF?text=鲁',
                         skins: [
-                            { id: 1, name: '电玩小子', code: '112-3-0', avatar: 'https://via.placeholder.com/60/FF5722/FFFFFF?text=玩' },
-                            { id: 2, name: '星空梦想', code: '112-4-0', avatar: 'https://via.placeholder.com/60/3F51B5/FFFFFF?text=空' },
-                            { id: 3, name: '狮舞东方', code: '112-5-0', avatar: 'https://via.placeholder.com/60/FFC107/333333?text=狮' }
+                            { skinId: 3, name: '电玩小子', avatar: 'https://via.placeholder.com/60/FF5722/FFFFFF?text=玩' },
+                            { skinId: 4, name: '星空梦想', avatar: 'https://via.placeholder.com/60/3F51B5/FFFFFF?text=空' },
+                            { skinId: 5, name: '狮舞东方', avatar: 'https://via.placeholder.com/60/FFC107/333333?text=狮' }
+                        ]
+                    },
+                    {
+                        heroId: 115, // 孙悟空的游戏代码
+                        name: '孙悟空',
+                        avatar: 'https://via.placeholder.com/50/FF9800/FFFFFF?text=孙',
+                        skins: [
+                            { skinId: 6, name: '地狱火', avatar: 'https://via.placeholder.com/60/FF9800/FFFFFF?text=火' },
+                            { skinId: 1, name: '至尊宝', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=宝' },
+                            { skinId: 2, name: '大圣娶亲', avatar: 'https://via.placeholder.com/60/E91E63/FFFFFF?text=亲' }
+                        ]
+                    },
+                    {
+                        heroId: 131, // 李白的游戏代码
+                        name: '李白',
+                        avatar: 'https://via.placeholder.com/50/2196F3/FFFFFF?text=李',
+                        skins: [
+                            { skinId: 2, name: '凤求凰', avatar: 'https://via.placeholder.com/60/E0E0E0/333333?text=凰' },
+                            { skinId: 1, name: '千年之狐', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=狐' },
+                            { skinId: 3, name: '敏锐之力', avatar: 'https://via.placeholder.com/60/FF9800/FFFFFF?text=力' }
+                        ]
+                    },
+                    {
+                        heroId: 141, // 貂蝉的游戏代码
+                        name: '貂蝉',
+                        avatar: 'https://via.placeholder.com/50/E91E63/FFFFFF?text=貂',
+                        skins: [
+                            { skinId: 3, name: '仲夏夜之梦', avatar: 'https://via.placeholder.com/60/9C27B0/FFFFFF?text=梦' },
+                            { skinId: 4, name: '猫影幻舞', avatar: 'https://via.placeholder.com/60/00BCD4/FFFFFF?text=舞' },
+                            { skinId: 2, name: '逐梦之音', avatar: 'https://via.placeholder.com/60/3F51B5/FFFFFF?text=音' }
+                        ]
+                    },
+                    {
+                        heroId: 169, // 后羿的游戏代码
+                        name: '后羿',
+                        avatar: 'https://via.placeholder.com/50/FF5722/FFFFFF?text=后',
+                        skins: [
+                            { skinId: 3, name: '黄金射手座', avatar: 'https://via.placeholder.com/60/FFC107/FFFFFF?text=金' },
+                            { skinId: 1, name: '辉光之辰', avatar: 'https://via.placeholder.com/60/2196F3/FFFFFF?text=辰' },
+                            { skinId: 2, name: '阿尔法小队', avatar: 'https://via.placeholder.com/60/4CAF50/FFFFFF?text=队' }
                         ]
                     }
                 ];
+                
+                // 对英雄按照游戏代码排序
+                state.heroes.sort((a, b) => a.heroId - b.heroId);
+                
+                // 对每个英雄的皮肤按照皮肤代码排序
+                state.heroes.forEach(hero => {
+                    hero.skins.sort((a, b) => a.skinId - b.skinId);
+                });
             } catch (error) {
                 console.error('加载英雄数据失败:', error);
                 throw error;
@@ -751,12 +761,12 @@
             filteredHeroes.forEach(hero => {
                 const heroItem = document.createElement('div');
                 heroItem.className = 'hero-item';
-                if (state.selectedHero && state.selectedHero.id === hero.id) {
+                if (state.selectedHero && state.selectedHero.heroId === hero.heroId) {
                     heroItem.classList.add('active');
                 }
                 
                 // 检查该英雄是否已选择皮肤
-                const hasSelectedSkin = state.selectedSkins[hero.id];
+                const hasSelectedSkin = state.selectedSkins[hero.heroId];
                 
                 heroItem.innerHTML = `
                     <img src="${hero.avatar}" alt="${hero.name}" class="hero-avatar">
@@ -801,8 +811,8 @@
                 skinItem.className = 'skin-item';
                 
                 // 检查是否已选择此皮肤
-                const isSelected = state.selectedSkins[state.selectedHero.id] && 
-                                  state.selectedSkins[state.selectedHero.id].id === skin.id;
+                const isSelected = state.selectedSkins[state.selectedHero.heroId] && 
+                                  state.selectedSkins[state.selectedHero.heroId].skinId === skin.skinId;
                 
                 if (isSelected) {
                     skinItem.classList.add('selected');
@@ -823,30 +833,28 @@
 
         // 为英雄选择皮肤
         function selectSkinForHero(skin) {
-            const wasSelected = state.selectedSkins[state.selectedHero.id] && 
-                              state.selectedSkins[state.selectedHero.id].id === skin.id;
+            const wasSelected = state.selectedSkins[state.selectedHero.heroId] && 
+                              state.selectedSkins[state.selectedHero.heroId].skinId === skin.skinId;
             
-            if (state.selectedSkins[state.selectedHero.id]) {
-                if (state.selectedSkins[state.selectedHero.id].id === skin.id) {
-                    delete state.selectedSkins[state.selectedHero.id];
+            if (state.selectedSkins[state.selectedHero.heroId]) {
+                if (state.selectedSkins[state.selectedHero.heroId].skinId === skin.skinId) {
+                    delete state.selectedSkins[state.selectedHero.heroId];
                     showNotification(`已移除 ${state.selectedHero.name} - ${skin.name}`, 'success');
                 } else {
-                    state.selectedSkins[state.selectedHero.id] = {
-                        id: skin.id,
-                        heroId: state.selectedHero.id,
+                    state.selectedSkins[state.selectedHero.heroId] = {
+                        skinId: skin.skinId,
+                        heroId: state.selectedHero.heroId,
                         heroName: state.selectedHero.name,
-                        name: skin.name,
-                        code: skin.code
+                        name: skin.name
                     };
                     showNotification(`已添加 ${state.selectedHero.name} - ${skin.name}`, 'success');
                 }
             } else {
-                state.selectedSkins[state.selectedHero.id] = {
-                    id: skin.id,
-                    heroId: state.selectedHero.id,
+                state.selectedSkins[state.selectedHero.heroId] = {
+                    skinId: skin.skinId,
+                    heroId: state.selectedHero.heroId,
                     heroName: state.selectedHero.name,
-                    name: skin.name,
-                    code: skin.code
+                    name: skin.name
                 };
                 showNotification(`已添加 ${state.selectedHero.name} - ${skin.name}`, 'success');
             }
@@ -857,21 +865,19 @@
         }
 
         // 根据格式生成代码
-        function formatCode(code, format) {
-            const parts = code.split('-');
-            
+        function formatCode(heroId, skinId, format) {
             switch(format) {
                 case 'default':
-                    // 默认格式：只显示前两部分，如 "115-2"
-                    return parts.slice(0, 2).join('-');
+                    // 默认格式：英雄代码-皮肤代码，如 "115-6"
+                    return `${heroId}-${skinId}`;
                 case 'kuaidou':
-                    // 快斗模式：显示完整代码，如 "115-2-0"
-                    return code;
+                    // 快斗模式：在末尾添加 "-0"，如 "115-6-0"
+                    return `${heroId}-${skinId}-0`;
                 case 'shusheng':
-                    // 书笙模式：用空格分隔，第三部分固定为1，如 "115 2 1"
-                    return `${parts[0]} ${parts[1]} 1`;
+                    // 书笙模式：用空格分隔，如 "115 6 1"
+                    return `${heroId} ${skinId} 1`;
                 default:
-                    return code;
+                    return `${heroId}-${skinId}`;
             }
         }
 
@@ -893,7 +899,7 @@
                 const codeItem = document.createElement('div');
                 codeItem.className = 'code-item';
                 
-                const formattedCode = formatCode(skin.code, state.codeFormat);
+                const formattedCode = formatCode(skin.heroId, skin.skinId, state.codeFormat);
                 
                 codeItem.innerHTML = `
                     <div class="code-content">
@@ -929,7 +935,7 @@
             }
             
             const codes = selectedSkinsArray.map(skin => {
-                const formattedCode = formatCode(skin.code, state.codeFormat);
+                const formattedCode = formatCode(skin.heroId, skin.skinId, state.codeFormat);
                 return `${formattedCode}  #${skin.heroName}-${skin.name}`;
             }).join('\n');
             
