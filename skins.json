@@ -3,8 +3,8 @@
     "name": "孙悟空",
     "heroCode": 123,
     "skins": [
-      { "name": "地狱火", "skinCode": 6 },
-      { "name": "齐天大圣", "skinCode": 9 }
+      { "name": "地狱火", "skinCode": 6, "avatar": "https://example.com/wukong1.png" },
+      { "name": "齐天大圣", "skinCode": 9, "avatar": "https://game.gtimg.cn/images/yxzj/coming/v2/skins//image/20230129/16749772283035.jpg" }
     ]
   }
 ]
